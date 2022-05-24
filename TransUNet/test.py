@@ -27,8 +27,8 @@ parser.add_argument('--num_classes', type=int,
 parser.add_argument('--list_dir', type=str,
                     default='./lists/lists_Synapse', help='list dir')
 
-parser.add_argument('--max_iterations', type=int,default=20000, help='maximum epoch number to train')
-parser.add_argument('--max_epochs', type=int, default=2, help='maximum epoch number to train')
+parser.add_argument('--max_iterations', type=int,default=100000, help='maximum epoch number to train')
+parser.add_argument('--max_epochs', type=int, default=20, help='maximum epoch number to train')
 parser.add_argument('--batch_size', type=int, default=4,
                     help='batch_size per gpu')
 parser.add_argument('--img_size', type=int, default=224, help='input patch size of network input')
@@ -39,7 +39,7 @@ parser.add_argument('--vit_name', type=str, default='ViT-B_16', help='select one
 
 parser.add_argument('--test_save_dir', type=str, default='../predictions', help='saving prediction as nii!')
 parser.add_argument('--deterministic', type=int,  default=1, help='whether use deterministic training')
-parser.add_argument('--base_lr', type=float,  default=0.01, help='segmentation network learning rate')
+parser.add_argument('--base_lr', type=float,  default=0.001, help='segmentation network learning rate')
 parser.add_argument('--seed', type=int, default=0, help='random seed')
 parser.add_argument('--vit_patches_size', type=int, default=16, help='vit_patches_size, default is 16')
 args = parser.parse_args()
@@ -102,8 +102,8 @@ if __name__ == "__main__":
     }
     args.dataset = 'own'
     args.vit_name = 'R50-ViT-B_16'
-    args.batch_size = 3
-    args.max_epochs = 150
+    args.batch_size = 4
+    args.max_epochs = 20
     dataset_name = args.dataset
     args.root_path = dataset_config[dataset_name]['root_path']
     args.num_classes = dataset_config[dataset_name]['num_classes']
@@ -120,11 +120,11 @@ if __name__ == "__main__":
     snapshot_path += '_' + args.vit_name
     snapshot_path = snapshot_path + '_skip' + str(args.n_skip)
     snapshot_path = snapshot_path + '_vitpatch' + str(args.vit_patches_size) if args.vit_patches_size!=16 else snapshot_path
-    snapshot_path = snapshot_path + '_epo' + str(args.max_epochs) if args.max_epochs != 20 else snapshot_path
+    snapshot_path = snapshot_path + '_epo' + str(args.max_epochs) if args.max_epochs != 100 else snapshot_path
     if dataset_name == 'ACDC':  # using max_epoch instead of iteration to control training duration
         snapshot_path = snapshot_path + '_' + str(args.max_iterations)[0:2] + 'k' if args.max_iterations != 30000 else snapshot_path
     snapshot_path = snapshot_path+'_bs'+str(args.batch_size)
-    snapshot_path = snapshot_path + '_lr' + str(args.base_lr) if args.base_lr != 0.01 else snapshot_path
+    snapshot_path = snapshot_path + '_lr' + str(args.base_lr) if args.base_lr != 0.001 else snapshot_path
     snapshot_path = snapshot_path + '_'+str(args.img_size)
     snapshot_path = snapshot_path + '_s'+str(args.seed) if args.seed!=0 else snapshot_path
 
